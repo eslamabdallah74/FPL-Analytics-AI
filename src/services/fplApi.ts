@@ -1,34 +1,68 @@
-// FPL Live API Service with browser CORS proxy fallback
+// FPL Live API Service with local Vite proxy, Vercel serverless function & CORS proxy fallbacks
 
+const PROXY_ALLORIGINS = 'https://api.allorigins.win/raw?url=';
+const PROXY_CORSPROXY = 'https://corsproxy.io/?';
+const PROXY_CODETABS = 'https://api.codetabs.com/v1/proxy?quest=';
 const FPL_BASE = 'https://fantasy.premierleague.com/api';
-const PROXY_1 = 'https://corsproxy.io/?';
-const PROXY_2 = 'https://api.allorigins.win/raw?url=';
 
 async function fetchWithFallback(endpoint: string): Promise<any> {
-  const targetUrl = `${FPL_BASE}${endpoint}`;
-  
-  // Try direct fetch first
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+  // 1. Try local Vite dev server proxy (/api/fpl/...)
   try {
-    const res = await fetch(targetUrl);
-    if (res.ok) return await res.json();
+    const res = await fetch(`/api/fpl${cleanEndpoint}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === 'object') return data;
+    }
   } catch (e) {
-    // Direct fetch blocked by CORS, fallback to CORS proxies
+    // Local Vite proxy failed or not in dev mode
   }
 
-  // Try proxy 1
+  // 2. Try Vercel Serverless API (/api/fpl?endpoint=...)
   try {
-    const res = await fetch(`${PROXY_1}${encodeURIComponent(targetUrl)}`);
-    if (res.ok) return await res.json();
+    const res = await fetch(`/api/fpl?endpoint=${encodeURIComponent(cleanEndpoint)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === 'object' && !data.error) return data;
+    }
   } catch (e) {
-    // Proxy 1 failed
+    // Vercel serverless handler failed
   }
 
-  // Try proxy 2
+  const targetUrl = `${FPL_BASE}${cleanEndpoint}`;
+
+  // 3. Fallback to AllOrigins CORS proxy
   try {
-    const res = await fetch(`${PROXY_2}${encodeURIComponent(targetUrl)}`);
-    if (res.ok) return await res.json();
+    const res = await fetch(`${PROXY_ALLORIGINS}${encodeURIComponent(targetUrl)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === 'object') return data;
+    }
   } catch (e) {
-    // Proxy 2 failed
+    // AllOrigins proxy failed
+  }
+
+  // 4. Fallback to CorsProxy.io
+  try {
+    const res = await fetch(`${PROXY_CORSPROXY}${encodeURIComponent(targetUrl)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === 'object') return data;
+    }
+  } catch (e) {
+    // CorsProxy failed
+  }
+
+  // 5. Fallback to CodeTabs proxy
+  try {
+    const res = await fetch(`${PROXY_CODETABS}${encodeURIComponent(targetUrl)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === 'object') return data;
+    }
+  } catch (e) {
+    // CodeTabs proxy failed
   }
 
   throw new Error(`Failed to fetch FPL data from endpoint ${endpoint}`);
