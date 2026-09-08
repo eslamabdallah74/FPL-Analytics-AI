@@ -261,41 +261,33 @@ export function getFixturePlanner(
 ): FixturePlannerResponse {
   const teamFdrs = calcTeamUpcomingFdr(teams, fixtures, currentGw);
   const planner: TeamFixturePlanner[] = [];
-  const easyRuns: FixtureRunAlert[] = [];
-  const hardRuns: FixtureRunAlert[] = [];
 
   for (const tId in teamFdrs) {
-    const data = teamFdrs[tId];
-    planner.push(data);
-    const avg = data.avg_fdr;
-    const tName = data.team_name;
-
-    if (avg <= 2.6) {
-      easyRuns.push({
-        team_id: data.team_id,
-        team_code: data.team_code,
-        team_name: tName,
-        shirt_url: data.shirt_url,
-        badge_url: data.badge_url,
-        avg_fdr: avg,
-        reason: `${tName} has one of the easiest fixture runs over the next 5 Gameweeks (Avg FDR ${avg}).`
-      });
-    } else if (avg >= 3.8) {
-      hardRuns.push({
-        team_id: data.team_id,
-        team_code: data.team_code,
-        team_name: tName,
-        shirt_url: data.shirt_url,
-        badge_url: data.badge_url,
-        avg_fdr: avg,
-        reason: `${tName} faces a tough schedule over the next 5 Gameweeks (Avg FDR ${avg}).`
-      });
-    }
+    planner.push(teamFdrs[tId]);
   }
 
+  // Sort by avg_fdr ascending
   planner.sort((a, b) => a.avg_fdr - b.avg_fdr);
-  easyRuns.sort((a, b) => a.avg_fdr - b.avg_fdr);
-  hardRuns.sort((a, b) => b.avg_fdr - a.avg_fdr);
+
+  const easyRuns: FixtureRunAlert[] = planner.slice(0, 4).map(data => ({
+    team_id: data.team_id,
+    team_code: data.team_code,
+    team_name: data.team_name,
+    shirt_url: data.shirt_url,
+    badge_url: data.badge_url,
+    avg_fdr: data.avg_fdr,
+    reason: `${data.team_name} has one of the easiest fixture runs over the next 5 Gameweeks (Avg FDR ${data.avg_fdr}).`
+  }));
+
+  const hardRuns: FixtureRunAlert[] = [...planner].sort((a, b) => b.avg_fdr - a.avg_fdr).slice(0, 4).map(data => ({
+    team_id: data.team_id,
+    team_code: data.team_code,
+    team_name: data.team_name,
+    shirt_url: data.shirt_url,
+    badge_url: data.badge_url,
+    avg_fdr: data.avg_fdr,
+    reason: `${data.team_name} faces a tough schedule over the next 5 Gameweeks (Avg FDR ${data.avg_fdr}).`
+  }));
 
   return {
     current_gameweek: currentGw,

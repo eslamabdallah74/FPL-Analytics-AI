@@ -6,8 +6,12 @@ import { PlayerAvatar } from '../components/PlayerAvatar';
 import { SearchablePlayerSelect } from '../components/SearchablePlayerSelect';
 import { TeamBadge } from '../components/TeamBadge';
 import { Loader } from '../components/Loader';
+import { useLanguage } from '../context/LanguageContext';
 
 export const CompareView: React.FC = () => {
+  const { t, language } = useLanguage();
+  const isAr = language === 'ar';
+
   const [allPlayers, setAllPlayers] = useState<Player[]>([]);
   const [p1Id, setP1Id] = useState<number | null>(null);
   const [p2Id, setP2Id] = useState<number | null>(null);
@@ -44,10 +48,10 @@ export const CompareView: React.FC = () => {
       <div className="glass-card p-5">
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
           <GitCompare className="w-6 h-6 text-indigo-400" />
-          <span>Smart Head-to-Head Player Comparison</span>
+          <span>{t('compare_title')}</span>
         </h1>
         <p className="text-xs text-gray-400 mt-1">
-          Select any two FPL players to run an algorithmic analytical comparison including expected points (xP), form, underlying 90-min metrics, and upcoming 3 & 5 fixture difficulty runs.
+          {t('compare_desc')}
         </p>
       </div>
 
@@ -58,8 +62,8 @@ export const CompareView: React.FC = () => {
             selectedId={p1Id}
             onSelect={(id) => setP1Id(id)}
             onOpenChange={(isOpen) => setOpenSelect(isOpen ? 'p1' : null)}
-            label="Select Player 1"
-            placeholder="Type player name, team, position..."
+            label={t('select_player_1')}
+            placeholder={isAr ? "اكتب اسم اللاعب، الفريق، أو المركز..." : "Type player name, team, position..."}
             loading={playersLoading}
           />
         </div>
@@ -70,15 +74,15 @@ export const CompareView: React.FC = () => {
             selectedId={p2Id}
             onSelect={(id) => setP2Id(id)}
             onOpenChange={(isOpen) => setOpenSelect(isOpen ? 'p2' : null)}
-            label="Select Player 2"
-            placeholder="Type player name, team, position..."
+            label={t('select_player_2')}
+            placeholder={isAr ? "اكتب اسم اللاعب، الفريق، أو المركز..." : "Type player name, team, position..."}
             loading={playersLoading}
           />
         </div>
       </div>
 
       {loading ? (
-        <Loader message="Running head-to-head algorithmic metric evaluation & fixture matrix..." />
+        <Loader message={t('loading')} />
       ) : result && winnerPlayer ? (
         <div className="space-y-6">
           {/* Smart Analytical Verdict Banner with Player Avatar & Kit Shirt */}
@@ -94,9 +98,9 @@ export const CompareView: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-extrabold text-indigo-400 uppercase tracking-widest block">
-                    Algorithmic Verdict Winner
+                    {t('verdict_winner')}
                   </span>
-                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     RECOMMENDED PICK
                   </span>
                 </div>
@@ -105,18 +109,20 @@ export const CompareView: React.FC = () => {
                   <span className="text-sm font-normal text-gray-300">({winnerPlayer.team_name} • £{winnerPlayer.price}M)</span>
                 </h2>
                 <p className="text-xs text-gray-300 mt-1 max-w-xl">
-                  {result.verdict}
+                  {isAr 
+                    ? `يوصى باختيار ${winnerPlayer.web_name} متفوقاً في المقارنة، بفضل النقاط المتوقعة ومعدل الأداء والمباريات القادمة.`
+                    : result.verdict}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0 font-mono">
+            <div className="flex items-center gap-3 shrink-0">
               <div className="bg-white/10 border border-white/15 px-4 py-2.5 rounded-2xl text-center">
-                <span className="text-[10px] text-gray-400 uppercase block">Expected Pts</span>
+                <span className="text-[10px] text-gray-400 uppercase block">{t('xp')}</span>
                 <span className="text-xl font-black text-emerald-400">{winnerPlayer.expected_points ?? 0} xP</span>
               </div>
               <div className="bg-white/10 border border-white/15 px-4 py-2.5 rounded-2xl text-center">
-                <span className="text-[10px] text-gray-400 uppercase block">Transfer Rating</span>
+                <span className="text-[10px] text-gray-400 uppercase block">{t('transfer_score')}</span>
                 <span className="text-xl font-black text-indigo-300">{winnerPlayer.transfer_score}</span>
               </div>
             </div>
@@ -126,10 +132,10 @@ export const CompareView: React.FC = () => {
           <div className="glass-card p-5 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
               <Calendar className="w-4 h-4 text-emerald-400" />
-              <span>Upcoming Fixtures & Difficulty Run Comparison</span>
+              <span>{isAr ? 'مقارنة صعوبة المباريات القادمة' : 'Upcoming Fixtures & Difficulty Run Comparison'}</span>
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {/* Player 1 Fixtures */}
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
@@ -141,13 +147,13 @@ export const CompareView: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-gray-400 block">Next 3 GW FDR</span>
+                    <span className="text-[10px] text-gray-400 block">{isAr ? 'معدل الـ 3 جولات' : 'Next 3 GW FDR'}</span>
                     <span className="text-emerald-400 font-bold">{result.p1_fdr_3 ?? result.player1.upcoming_fdr}</span>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="text-[10px] text-gray-400 uppercase block font-sans font-semibold">Next 5 Gameweek Schedule:</span>
+                  <span className="text-[10px] text-gray-400 uppercase block font-semibold">{isAr ? 'مباريات الـ 5 جولات القادمة:' : 'Next 5 Gameweek Schedule:'}</span>
                   <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                     {result.player1.upcoming_fixtures?.map((f, i) => (
                       <div
@@ -161,7 +167,7 @@ export const CompareView: React.FC = () => {
                           <TeamBadge shirtUrl={f.opponent_shirt_url} badgeUrl={f.opponent_badge_url} teamCode={f.opponent_code} teamName={f.opponent_name} size="xs" />
                           <span>{f.opponent_short}</span>
                         </div>
-                        <span className="block text-[9px] opacity-80">{f.is_home ? '(H)' : '(A)'}</span>
+                        <span className="block text-[9px] opacity-80">{f.is_home ? (isAr ? '(ملعبه)' : '(H)') : (isAr ? '(خارج)' : '(A)')}</span>
                       </div>
                     ))}
                   </div>
@@ -179,13 +185,13 @@ export const CompareView: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-gray-400 block">Next 3 GW FDR</span>
+                    <span className="text-[10px] text-gray-400 block">{isAr ? 'معدل الـ 3 جولات' : 'Next 3 GW FDR'}</span>
                     <span className="text-emerald-400 font-bold">{result.p2_fdr_3 ?? result.player2.upcoming_fdr}</span>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="text-[10px] text-gray-400 uppercase block font-sans font-semibold">Next 5 Gameweek Schedule:</span>
+                  <span className="text-[10px] text-gray-400 uppercase block font-semibold">{isAr ? 'مباريات الـ 5 جولات القادمة:' : 'Next 5 Gameweek Schedule:'}</span>
                   <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                     {result.player2.upcoming_fixtures?.map((f, i) => (
                       <div
@@ -199,7 +205,7 @@ export const CompareView: React.FC = () => {
                           <TeamBadge shirtUrl={f.opponent_shirt_url} badgeUrl={f.opponent_badge_url} teamCode={f.opponent_code} teamName={f.opponent_name} size="xs" />
                           <span>{f.opponent_short}</span>
                         </div>
-                        <span className="block text-[9px] opacity-80">{f.is_home ? '(H)' : '(A)'}</span>
+                        <span className="block text-[9px] opacity-80">{f.is_home ? (isAr ? '(ملعبه)' : '(H)') : (isAr ? '(خارج)' : '(A)')}</span>
                       </div>
                     ))}
                   </div>
@@ -214,9 +220,9 @@ export const CompareView: React.FC = () => {
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 space-y-2">
                 <h4 className="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>{result.player1.web_name}'s Key Advantages</span>
+                  <span>{t('advantages_of', { name: result.player1.web_name })}</span>
                 </h4>
-                <ul className="space-y-1.5 text-xs text-gray-200 font-mono">
+                <ul className="space-y-1.5 text-xs text-gray-200">
                   {result.p1_advantages?.slice(0, 5).map((adv, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -229,9 +235,9 @@ export const CompareView: React.FC = () => {
               <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-4 space-y-2">
                 <h4 className="text-xs font-bold text-indigo-400 flex items-center gap-1.5 uppercase tracking-wider">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>{result.player2.web_name}'s Key Advantages</span>
+                  <span>{t('advantages_of', { name: result.player2.web_name })}</span>
                 </h4>
-                <ul className="space-y-1.5 text-xs text-gray-200 font-mono">
+                <ul className="space-y-1.5 text-xs text-gray-200">
                   {result.p2_advantages?.slice(0, 5).map((adv, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <CheckCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
@@ -267,11 +273,11 @@ export const CompareView: React.FC = () => {
                 <thead>
                   <tr className="border-b border-white/10 text-gray-400 uppercase">
                     <th className="py-3">{result.player1.web_name}</th>
-                    <th className="py-3 text-center">Metric Category</th>
+                    <th className="py-3 text-center">{isAr ? 'مؤشر الإحصائية' : 'Metric Category'}</th>
                     <th className="py-3 text-right">{result.player2.web_name}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 font-mono text-sm">
+                <tbody className="divide-y divide-white/5 text-sm">
                   {result.matrix.map((row, i) => (
                     <tr key={i} className="hover:bg-white/5 transition-colors">
                       <td className={`py-3 ${row.winner === 'player1' ? 'text-[#38ef7d] font-bold' : 'text-gray-300'}`}>
@@ -281,7 +287,7 @@ export const CompareView: React.FC = () => {
                         </div>
                       </td>
 
-                      <td className="py-3 text-center font-sans font-semibold text-gray-400 text-xs">
+                      <td className="py-3 text-center font-semibold text-gray-400 text-xs">
                         {row.metric}
                       </td>
 
@@ -303,9 +309,11 @@ export const CompareView: React.FC = () => {
           <div className="p-4 bg-indigo-500/10 text-indigo-400 rounded-2xl border border-indigo-500/20">
             <Users className="w-8 h-8" />
           </div>
-          <h3 className="text-base font-bold text-white">Select Players to Compare</h3>
+          <h3 className="text-base font-bold text-white">{isAr ? 'اختر اللاعبين للمقارنة' : 'Select Players to Compare'}</h3>
           <p className="text-xs text-gray-400 max-w-sm">
-            Choose Player 1 and Player 2 from the searchable dropdowns above to compare expected points (xP), recent form, ICT index, value scores, upcoming 3 & 5 fixture runs, and key statistical advantages.
+            {isAr 
+              ? 'قم باختيار اللاعب الأول واللاعب الثاني من القائمة أعلاه لمقارنة النقاط المتوقعة، المستوى، القيمة، وجدول المباريات.'
+              : 'Choose Player 1 and Player 2 from the dropdowns above to compare expected points (xP), recent form, ICT index, value scores, upcoming fixture runs, and statistical advantages.'}
           </p>
         </div>
       )}

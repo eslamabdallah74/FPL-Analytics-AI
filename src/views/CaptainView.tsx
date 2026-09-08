@@ -4,12 +4,16 @@ import type { CaptainCandidate, Player } from '../types';
 import { fetchCaptains } from '../services/api';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { Loader } from '../components/Loader';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CaptainViewProps {
   onSelectPlayer: (player: Player) => void;
 }
 
 export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
+  const { t, language } = useLanguage();
+  const isAr = language === 'ar';
+
   const [candidates, setCandidates] = useState<CaptainCandidate[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,20 +25,27 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
   }, []);
 
   if (loading) {
-    return <Loader message="Evaluating Gameweek captain candidates..." />;
+    return <Loader message={t('loading')} />;
   }
 
   const topPick = candidates[0];
+
+  const getRationaleText = (c: CaptainCandidate) => {
+    if (isAr) {
+      return `مستوى هجومي مرتفع (${c.player.form_score} نقطة/جولة)، مشاركة أساسية مضمونة (${c.player.rotation_risk === 'Low' ? 'منخفض المخاطر' : 'متوسط المخاطر'}) وصعوبة مباريات قادمة FDR قدرها ${c.player.upcoming_fdr}.`;
+    }
+    return c.rationale;
+  };
 
   return (
     <div className="space-y-6">
       <div className="glass-card p-5">
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
           <Crown className="w-6 h-6 text-purple-400" />
-          <span>Captain Analytics & Candidate Rankings</span>
+          <span>{t('captains_title')}</span>
         </h1>
         <p className="text-xs text-gray-400 mt-1">
-          Gameweek captain potential calculated using attacking output, opponent fixture difficulty, expected minutes, and bonus potential.
+          {t('captains_desc', { gw: '3' })}
         </p>
       </div>
 
@@ -43,15 +54,15 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
           <div className="flex items-center gap-4">
             <PlayerAvatar player={topPick.player} size="lg" />
             <div>
-              <span className="text-xs font-extrabold text-purple-400 uppercase tracking-widest block">Recommended Captain Pick</span>
+              <span className="text-xs font-extrabold text-purple-400 uppercase tracking-widest block">{isAr ? 'خيار الكابتن الأول الموصى به' : 'Recommended Captain Pick'}</span>
               <h2 className="text-2xl font-black text-white">{topPick.player.web_name}</h2>
-              <p className="text-xs text-gray-300 mt-1 max-w-xl">{topPick.rationale}</p>
+              <p className="text-xs text-gray-300 mt-1 max-w-xl">{getRationaleText(topPick)}</p>
             </div>
           </div>
 
-          <div className="text-right font-mono shrink-0">
+          <div className="text-right shrink-0">
             <span className="text-3xl font-black text-purple-300 block">{topPick.captain_score}</span>
-            <span className="text-xs text-gray-400">Captain Rating</span>
+            <span className="text-xs text-gray-400">{t('captain_score')}</span>
           </div>
         </div>
       )}
@@ -65,7 +76,7 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 font-mono text-sm font-extrabold flex items-center justify-center shrink-0">
+                <span className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 text-sm font-extrabold flex items-center justify-center shrink-0">
                   #{c.rank}
                 </span>
                 <PlayerAvatar player={c.player} size="md" />
@@ -79,20 +90,20 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
                 </div>
               </div>
 
-              <div className="text-right font-mono">
+              <div className="text-right">
                 <span className="text-xl font-bold text-purple-400 block">{c.captain_score}</span>
-                <span className="text-[10px] text-gray-400 uppercase">Captain Score</span>
+                <span className="text-[10px] text-gray-400 uppercase">{t('captain_score')}</span>
               </div>
             </div>
 
             <p className="text-xs text-gray-300 bg-white/5 p-2.5 rounded-xl border border-white/5">
-              {c.rationale}
+              {getRationaleText(c)}
             </p>
 
-            <div className="flex items-center justify-between pt-1 text-[11px] font-mono text-gray-400">
-              <span>Form: <strong className="text-amber-400">{c.player.form_score}</strong></span>
+            <div className="flex items-center justify-between pt-1 text-[11px] text-gray-400">
+              <span>{t('form')}: <strong className="text-amber-400">{c.player.form_score}</strong></span>
               <span>FDR: <strong className="text-emerald-400">{c.player.upcoming_fdr}</strong></span>
-              <span>Minutes Risk: <strong className="text-white">{c.player.rotation_risk}</strong></span>
+              <span>{t('rotation_risk')}: <strong className="text-white">{isAr ? (c.player.rotation_risk === 'Low' ? 'منخفض' : 'متوسط') : c.player.rotation_risk}</strong></span>
             </div>
           </div>
         ))}

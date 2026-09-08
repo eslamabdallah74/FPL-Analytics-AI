@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { DashboardResponse, Player } from '../types';
 import { PlayerAvatar } from '../components/PlayerAvatar';
+import { useLanguage } from '../context/LanguageContext';
 
 interface DashboardViewProps {
   data: DashboardResponse;
@@ -17,28 +18,57 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlayer, onNavigate }) => {
+  const { t, language } = useLanguage();
+
+  const isAr = language === 'ar';
+
   return (
     <div className="space-y-6">
-      <div className="glass-card p-6 border-l-4 border-l-[#38ef7d] flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-bold text-[#38ef7d] uppercase tracking-wider block mb-1">
-            FPL Analytics Platform • GW {data.current_gameweek} Overview
-          </span>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white">
-            Algorithmic Intelligence for Fantasy Premier League
-          </h1>
-          <p className="text-sm text-gray-400 mt-1 max-w-xl">
-            Derived metrics, fixture run detection, transfer scoring, and captain rankings computed in real time from public FPL data.
-          </p>
+      {/* Premier League Broadcast Hero Section */}
+      <div className="relative glass-card-hero p-6 md:p-8 border-l-4 border-l-[#00e676] overflow-hidden">
+        {/* Subtle GW Watermark Background */}
+        <div className="absolute right-4 bottom-0 text-7xl md:text-9xl font-black text-[#00e676]/[0.06] select-none pointer-events-none tracking-tighter">
+          GW 0{data.current_gameweek}
         </div>
-        <div className="flex gap-3 font-mono">
-          <div className="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl text-center">
-            <span className="text-xs text-gray-400 block">Total Players</span>
-            <span className="text-xl font-bold text-white">{data.total_players}</span>
+
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-md bg-[#00e676]/15 text-[#39ff88] text-[10px] font-black uppercase tracking-wider border border-[#00e676]/30">
+                {t('gw_overview', { gw: data.current_gameweek })}
+              </span>
+              <span className="text-xs text-gray-400 font-mono">• 2026/27 SEASON</span>
+            </div>
+
+            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase leading-none">
+              {isAr ? 'ابنِ فريقك المثالي في الفانتسي' : 'BUILD YOUR PERFECT FPL TEAM'}
+            </h1>
+
+            <p className="text-sm text-gray-300">
+              {t('hero_description')}
+            </p>
+
+            <div className="pt-2">
+              <button
+                onClick={() => onNavigate('generator')}
+                className="angular-btn px-6 py-3 bg-[#00e676] hover:bg-[#39ff88] text-[#07110d] font-black text-xs uppercase tracking-wider rounded-lg flex items-center gap-2 shadow-lg shadow-[#00e676]/20 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 fill-current" />
+                <span>{isAr ? 'ابنِ فريقي الآن' : 'BUILD MY TEAM'}</span>
+                <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
           </div>
-          <div className="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl text-center">
-            <span className="text-xs text-gray-400 block">Current GW</span>
-            <span className="text-xl font-bold text-[#38ef7d]">{data.current_gameweek}</span>
+
+          <div className="flex gap-3 shrink-0">
+            <div className="bg-[#07110d]/80 border border-[#1a2a22] px-4 py-3 rounded-xl text-center min-w-[90px]">
+              <span className="text-[10px] text-gray-400 uppercase tracking-wider block">{t('total_players')}</span>
+              <span className="text-2xl font-black text-white">{data.total_players}</span>
+            </div>
+            <div className="bg-[#07110d]/80 border border-[#00e676]/30 px-4 py-3 rounded-xl text-center min-w-[90px]">
+              <span className="text-[10px] text-gray-400 uppercase tracking-wider block">{t('current_gw')}</span>
+              <span className="text-2xl font-black text-[#39ff88]">GW {data.current_gameweek}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -50,9 +80,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-emerald-300">🔥 Easy Fixture Runs Detected</h3>
+              <h3 className="text-sm font-bold text-emerald-300">{t('easy_fixture_runs_detected')}</h3>
               <p className="text-xs text-gray-300">
-                {data.easy_fixture_runs.map(r => r.reason).join(' • ')}
+                {data.easy_fixture_runs.map(r => {
+                  if (isAr) {
+                    return `${r.team_name} لديه واحدة من أسهل الجداول في الـ 5 جولات القادمة (معدل FDR ${r.avg_fdr}).`;
+                  }
+                  return r.reason;
+                }).join(' • ')}
               </p>
             </div>
           </div>
@@ -60,8 +95,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
             onClick={() => onNavigate('fixtures')}
             className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 shrink-0 cursor-pointer"
           >
-            <span>View Planner</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{t('view_planner')}</span>
+            <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
           </button>
         </div>
       )}
@@ -73,14 +108,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
               <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl">
                 <TrendingUp className="w-4 h-4" />
               </div>
-              <h2 className="text-lg font-bold text-white">Top Transfer Targets</h2>
+              <h2 className="text-lg font-bold text-white">{t('top_transfer_targets')}</h2>
             </div>
             <button
               onClick={() => onNavigate('transfers')}
               className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 cursor-pointer"
             >
-              <span>See All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{t('see_all')}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
@@ -105,12 +140,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
                     </span>
                   </div>
                 </div>
-                <div className="text-right font-mono">
+                <div className="text-right">
                   <span className="text-sm font-bold text-emerald-400 block">
-                    {target.transfer_score} pts
+                    {target.transfer_score} {t('pts')}
                   </span>
-                  <span className="text-[10px] text-gray-400 block max-w-[140px] truncate">
-                    {target.primary_reason}
+                  <span className="text-[10px] text-gray-400 block max-w-[160px] truncate">
+                    {isAr && target.primary_reason.includes('Strong recent form') 
+                      ? `مستوى قوي مؤخراً (${target.player.form_score} نقطة/جولة)` 
+                      : target.primary_reason}
                   </span>
                 </div>
               </div>
@@ -124,14 +161,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
               <div className="p-2 bg-purple-500/20 text-purple-400 rounded-xl">
                 <Crown className="w-4 h-4" />
               </div>
-              <h2 className="text-lg font-bold text-white">Captain Candidates</h2>
+              <h2 className="text-lg font-bold text-white">{t('captain_candidates')}</h2>
             </div>
             <button
               onClick={() => onNavigate('captains')}
               className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 cursor-pointer"
             >
-              <span>See All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{t('see_all')}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
@@ -152,13 +189,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
                       {candidate.player.web_name}
                     </h4>
                     <span className="text-xs text-gray-400">
-                      {candidate.player.team_name} • £{candidate.player.price}M • Form: {candidate.player.form_score}
+                      {candidate.player.team_name} • £{candidate.player.price}M • {t('form')}: {candidate.player.form_score}
                     </span>
                   </div>
                 </div>
-                <div className="text-right font-mono">
+                <div className="text-right">
                   <span className="text-sm font-bold text-purple-400 block">
-                    {candidate.captain_score} pts
+                    {candidate.captain_score} {t('pts')}
                   </span>
                   <span className="text-[10px] text-gray-400 block">
                     FDR: {candidate.player.upcoming_fdr}
@@ -175,14 +212,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
               <div className="p-2 bg-amber-500/20 text-amber-400 rounded-xl">
                 <Activity className="w-4 h-4" />
               </div>
-              <h2 className="text-lg font-bold text-white">Peak Form Players</h2>
+              <h2 className="text-lg font-bold text-white">{t('peak_form_players')}</h2>
             </div>
             <button
               onClick={() => onNavigate('players')}
               className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 cursor-pointer"
             >
-              <span>Browse All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{t('browse_all')}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
@@ -197,8 +234,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
                 <div className="overflow-hidden">
                   <span className="text-[10px] text-gray-400 font-semibold block">{p.team_name}</span>
                   <h4 className="text-xs font-bold text-white truncate">{p.web_name}</h4>
-                  <div className="mt-0.5 flex items-center justify-between font-mono text-[10px]">
-                    <span className="text-amber-400 font-bold">Form {p.form_score}</span>
+                  <div className="mt-0.5 flex items-center justify-between text-[10px]">
+                    <span className="text-amber-400 font-bold">{t('form')} {p.form_score}</span>
                   </div>
                 </div>
               </div>
@@ -212,14 +249,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
               <div className="p-2 bg-cyan-500/20 text-cyan-400 rounded-xl">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <h2 className="text-lg font-bold text-white">Differentials (&lt; 10% Ownership)</h2>
+              <h2 className="text-lg font-bold text-white">{t('differentials_under_10')}</h2>
             </div>
             <button
               onClick={() => onNavigate('differentials')}
               className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 cursor-pointer"
             >
-              <span>See Differentials</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{t('see_differentials')}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
@@ -234,7 +271,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ data, onSelectPlay
                 <div className="overflow-hidden">
                   <span className="text-[10px] text-gray-400 font-semibold block">{p.team_name}</span>
                   <h4 className="text-xs font-bold text-white truncate">{p.web_name}</h4>
-                  <div className="mt-0.5 flex items-center justify-between font-mono text-[10px]">
+                  <div className="mt-0.5 flex items-center justify-between text-[10px]">
                     <span className="text-cyan-400 font-bold">{p.selected_by_percent}%</span>
                   </div>
                 </div>

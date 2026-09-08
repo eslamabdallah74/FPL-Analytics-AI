@@ -3,19 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --bg-dark: #070a12;
-  --bg-card: rgba(18, 26, 41, 0.85);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --primary: #38ef7d;
-  --primary-glow: rgba(56, 239, 125, 0.3);
-  --accent: #11998e;
-  --purple: #8b5cf6;
-  --warning: #f59e0b;
-  --danger: #f43f5e;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --font-main: 'Outfit', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Layered Dark Stadium Palette */
+  --bg-stadium: #07110d;
+  --surface-card: #0d1914;
+  --surface-card-2: #13231c;
+  --surface-card-3: #192e24;
+  --border-subtle: #1a2a22;
+  --border-glow: rgba(0, 230, 118, 0.25);
+  
+  /* Pitch Accents */
+  --accent-pitch: #00e676;
+  --accent-bright: #39ff88;
+  --accent-gold: #ffd700;
+  --accent-cyan: #00d2ff;
+  --accent-orange: #ff5a5a;
+
+  /* Data & Semantic Colors */
+  --color-excellent: #39ff88;
+  --color-good: #a8e063;
+  --color-neutral: #f5c451;
+  --color-warning: #ff9f43;
+  --color-danger: #ff5c5c;
+
+  /* Typography Colors */
+  --text-white: #f5f7f6;
+  --text-muted: #8b9a92;
+  --text-accent: #39ff88;
+  
+  /* Athletic Radii */
+  --radius-compact: 6px;
+  --radius-normal: 12px;
+  --radius-hero: 16px;
+
+  /* Font Families */
+  --font-main: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
 }
 
 * {
@@ -25,18 +47,27 @@
 }
 
 body {
-  background-color: var(--bg-dark);
+  background-color: var(--bg-stadium);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(17, 153, 142, 0.2) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.2) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(56, 239, 125, 0.06) 0px, transparent 50%);
-  color: var(--text-main);
+    radial-gradient(ellipse at 50% 0%, rgba(0, 230, 118, 0.08) 0%, transparent 65%),
+    radial-gradient(circle at 100% 100%, rgba(13, 25, 20, 0.9) 0%, transparent 50%),
+    linear-gradient(to bottom, #07110d 0%, #050d0a 100%);
+  color: var(--text-white);
   font-family: var(--font-main);
   min-height: 100vh;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
-/* Hide scrollbar utility */
+/* Faint Tactical Pitch Overlay (2-4% Opacity) */
+.pitch-bg-overlay {
+  background-image: 
+    linear-gradient(to right, rgba(0, 230, 118, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Hide scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;
 }
@@ -45,38 +76,75 @@ body {
   scrollbar-width: none !important;
 }
 
-/* Glassmorphism Card */
+/* Broadcast Glass Card */
 .glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-normal);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(0, 230, 118, 0.22);
 }
 
-/* FDR Badges */
+.glass-card-compact {
+  background: var(--surface-card-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-compact);
+}
+
+.glass-card-hero {
+  background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-card-2) 100%);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  border-radius: var(--radius-hero);
+}
+
+/* Angular Cut Broadcast Accent Shapes */
+.angular-card {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.angular-btn {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.angular-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+/* Opta FDR Heatmap Badges */
 .fdr-1, .fdr-2 {
-  background: rgba(34, 197, 94, 0.18);
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  color: #4ade80;
+  background: rgba(57, 255, 136, 0.15);
+  border: 1px solid rgba(57, 255, 136, 0.35);
+  color: var(--accent-bright);
+  border-radius: var(--radius-compact);
 }
 
 .fdr-3 {
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  color: #fbbf24;
+  background: rgba(245, 196, 81, 0.15);
+  border: 1px solid rgba(245, 196, 81, 0.35);
+  color: var(--color-neutral);
+  border-radius: var(--radius-compact);
 }
 
 .fdr-4, .fdr-5 {
-  background: rgba(244, 63, 94, 0.18);
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  color: #f87171;
+  background: rgba(255, 92, 92, 0.15);
+  border: 1px solid rgba(255, 92, 92, 0.35);
+  color: var(--color-danger);
+  border-radius: var(--radius-compact);
+}
+
+/* Custom Tactical Pitch Canvas */
+.tactical-pitch {
+  background: radial-gradient(circle at 50% 50%, #0e2a1e 0%, #091b13 70%, #06120d 100%);
+  border: 2px solid rgba(0, 230, 118, 0.3);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
 }
 
 /* Custom Scrollbar */
@@ -85,12 +153,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(7, 10, 18, 0.8);
+  background: var(--bg-stadium);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--border-subtle);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 239, 125, 0.4);
+  background: var(--accent-pitch);
 }
