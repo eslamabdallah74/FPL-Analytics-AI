@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1424" />
+      <stop offset="50%" stop-color="#070a12" />
+      <stop offset="100%" stop-color="#030509" />
+    </linearGradient>
+
+    <!-- Brand Emerald-Cyan Gradient -->
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38ef7d" />
+      <stop offset="50%" stop-color="#11998e" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+
+    <!-- Accent Crown Purple Gradient -->
+    <linearGradient id="accentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="emeraldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Card Container -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="url(#primaryGrad)" stroke-width="8" opacity="0.35" />
+
+  <!-- Background Halo -->
+  <circle cx="256" cy="256" r="170" fill="url(#primaryGrad)" opacity="0.1" filter="url(#emeraldGlow)" />
+
+  <!-- FPL Crown Crest Symbol -->
+  <path d="M 140 210 L 190 280 L 256 180 L 322 280 L 372 210 L 396 330 H 116 Z" fill="url(#accentGrad)" opacity="0.8" />
+
+  <!-- Analytics Rising Trendline Overlay -->
+  <path d="M 120 360 L 195 290 L 275 320 L 392 180" fill="none" stroke="url(#primaryGrad)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" filter="url(#emeraldGlow)" />
+
+  <!-- High-Growth Trend Dot -->
+  <circle cx="392" cy="180" r="20" fill="#38ef7d" filter="url(#emeraldGlow)" />
+  <circle cx="392" cy="180" r="10" fill="#ffffff" />
+</svg>

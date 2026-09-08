@@ -1,0 +1,65 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fpl_backend
+    ports:
+      - "9000:8000"
+    environment:
+      - FPL_BASE_URL=https://fantasy.premierleague.com/api/
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fpldb
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - fpl_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: fpl_postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fpldb
+    ports:
+      - "5432:5432"
+    networks:
+      - fpl_net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fpldb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fpl_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - fpl_net
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  fpl_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

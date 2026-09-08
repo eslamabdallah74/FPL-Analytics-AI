@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPL AI - Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: rgba(22, 30, 46, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #38ef7d;
+            --primary-glow: rgba(56, 239, 125, 0.25);
+            --purple: #8b5cf6;
+            --warning: #f59e0b;
+            --danger: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(17, 153, 142, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header Bar */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-tag {
+            background: linear-gradient(135deg, #11998e, var(--primary));
+            color: #000;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(56, 239, 125, 0.1);
+            border: 1px solid rgba(56, 239, 125, 0.3);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-val {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: #fff;
+        }
+
+        /* Visual Pitch */
+        .pitch {
+            background: linear-gradient(180deg, #15803d 0%, #166534 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+            margin-bottom: 1.5rem;
+        }
+
+        .pitch-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .player-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            text-align: center;
+            min-width: 95px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .player-card.captain::after {
+            content: 'C';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--warning);
+            color: #000;
+            font-weight: 800;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-card.vice::after {
+            content: 'V';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #94a3b8;
+            color: #000;
+            font-weight: 800;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .player-team {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Bench Table */
+        .bench-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        /* Disconnect Button */
+        .btn-disconnect {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            color: var(--danger);
+            font-family: var(--font-main);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-disconnect:hover {
+            background: rgba(244, 63, 94, 0.25);
+            border-color: rgba(244, 63, 94, 0.5);
+        }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-group">
+                <div class="logo-tag">FPL AI</div>
+                <h1>Connected Dashboard</h1>
+            </div>
+            <div class="status-badge">
+                <div class="dot"></div>
+                <span>Connected to FPL ✓</span>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="user-header">
+                <div>
+                    <div id="userName" class="user-name">Loading...</div>
+                    <div class="meta-label">Your FPL account is successfully connected.</div>
+                </div>
+                <form action="/auth/fpl/disconnect" method="POST">
+                    <button type="submit" class="btn-disconnect">🔴 Disconnect FPL</button>
+                </form>
+            </div>
+
+            <div class="meta-grid">
+                <div class="meta-box">
+                    <div class="meta-label">Manager ID</div>
+                    <div id="metaManagerId" class="meta-val">-</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">Current Gameweek</div>
+                    <div id="metaGameweek" class="meta-val">-</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">Starting XI</h3>
+            <div id="pitchLoader" class="loader"></div>
+            <div id="pitchContainer" class="pitch" style="display: none;">
+                <div id="rowGk" class="pitch-row"></div>
+                <div id="rowDef" class="pitch-row"></div>
+                <div id="rowMid" class="pitch-row"></div>
+                <div id="rowFwd" class="pitch-row"></div>
+            </div>
+
+            <h4 style="margin-bottom: 0.75rem;">Bench</h4>
+            <div id="benchContainer" class="bench-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDashboard() {
+            try {
+                // 1. Load Status
+                const statusRes = await fetch('/api/auth/status');
+                const statusData = await statusRes.json();
+
+                if (!statusData.connected) {
+                    window.location.href = '/';
+                    return;
+                }
+
+                document.getElementById('userName').textContent = statusData.fpl_user_name || `Manager ${statusData.fpl_manager_id}`;
+                document.getElementById('metaManagerId').textContent = statusData.fpl_manager_id || '-';
+                document.getElementById('metaGameweek').textContent = `GW ${statusData.current_gameweek || 1}`;
+
+                // 2. Load Team Picks
+                const teamRes = await fetch('/api/team');
+                const teamData = await teamRes.json();
+
+                document.getElementById('pitchLoader').style.display = 'none';
+                document.getElementById('pitchContainer').style.display = 'flex';
+
+                const team = teamData.team || {};
+                const xi = team.starting_xi || [];
+                const bench = team.bench || [];
+
+                const gk = xi.filter(p => p.element_type === 1);
+                const def = xi.filter(p => p.element_type === 2);
+                const mid = xi.filter(p => p.element_type === 3);
+                const fwd = xi.filter(p => p.element_type === 4);
+
+                const renderRow = players => players.map(p => `
+                    <div class="player-card ${p.is_captain ? 'captain' : (p.is_vice_captain ? 'vice' : '')}">
+                        <div class="player-name">${p.player_web_name}</div>
+                        <div class="player-team">${p.team_name}</div>
+                    </div>
+                `).join('');
+
+                document.getElementById('rowGk').innerHTML = renderRow(gk);
+                document.getElementById('rowDef').innerHTML = renderRow(def);
+                document.getElementById('rowMid').innerHTML = renderRow(mid);
+                document.getElementById('rowFwd').innerHTML = renderRow(fwd);
+
+                document.getElementById('benchContainer').innerHTML = bench.map(p => `
+                    <div class="player-card">
+                        <div class="player-name">${p.player_web_name}</div>
+                        <div class="player-team">${p.position_name} • ${p.team_name}</div>
+                    </div>
+                `).join('');
+
+            } catch (e) {
+                console.error('Error loading dashboard:', e);
+            }
+        }
+
+        window.addEventListener('load', loadDashboard);
+    </script>
+</body>
+</html>
