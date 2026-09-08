@@ -12,10 +12,20 @@ interface PlayerDetailModalProps {
 }
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, onClose }) => {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [actionVerdict, setActionVerdict] = useState<PlayerActionVerdict | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   useEffect(() => {
     if (player) {
@@ -40,11 +50,18 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, on
     'text-rose-400 bg-rose-500/10 border-rose-500/30';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 text-white relative">
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 text-white relative"
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+          className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors z-10`}
+          title={t('close')}
         >
           <X className="w-5 h-5" />
         </button>
