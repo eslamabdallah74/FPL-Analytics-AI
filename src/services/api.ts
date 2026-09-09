@@ -55,10 +55,21 @@ async function ensureDataLoaded(): Promise<{ players: Player[]; teams: any[]; fi
   cachedBootstrap = bootstrap;
   cachedFixturesData = fixtures;
 
-  // Determine current gameweek
+  // Determine current active planning gameweek
   const events = bootstrap.events || [];
-  const currentEvent = events.find((e: any) => e.is_current) || events.find((e: any) => e.is_next) || events[0];
-  cachedCurrentGw = currentEvent ? currentEvent.id : 1;
+  const currentEvent = events.find((e: any) => e.is_current);
+  const nextEvent = events.find((e: any) => e.is_next) || events.find((e: any) => !e.finished);
+
+  let activeGw = 1;
+  if (currentEvent && !currentEvent.finished) {
+    activeGw = currentEvent.id;
+  } else if (nextEvent) {
+    activeGw = nextEvent.id;
+  } else if (currentEvent) {
+    activeGw = currentEvent.id;
+  }
+
+  cachedCurrentGw = activeGw;
 
   cachedProcessedPlayers = processPlayers(
     bootstrap.elements || [],
