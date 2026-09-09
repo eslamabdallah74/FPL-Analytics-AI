@@ -54,17 +54,17 @@ export const PlayersView: React.FC<PlayersViewProps> = ({ onSelectPlayer }) => {
   }, [search, position, maxPrice, sortBy]);
 
   return (
-    <div className="space-y-6">
-      <div className="glass-card p-5 space-y-4 relative z-40">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="glass-card p-4 sm:p-5 space-y-4 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">{t('players_matrix_title')}</h1>
-            <p className="text-xs text-gray-400">
+            <h1 className="text-xl sm:text-2xl font-bold text-white">{t('players_matrix_title')}</h1>
+            <p className="text-xs text-gray-400 mt-0.5">
               {t('players_matrix_desc')}
             </p>
           </div>
 
-          <div className="relative min-w-[240px]">
+          <div className="relative w-full md:min-w-[240px] md:w-auto">
             <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
             <input
               type="text"
@@ -76,15 +76,16 @@ export const PlayersView: React.FC<PlayersViewProps> = ({ onSelectPlayer }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/10">
-          <div className="flex items-center gap-1">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 border-t border-white/10">
+          {/* Scrollable position pills on mobile */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar min-w-0">
             {['', 'GKP', 'DEF', 'MID', 'FWD'].map((pos) => (
               <button
                 key={pos}
                 onClick={() => setPosition(pos)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   position === pos
-                    ? 'bg-[#38ef7d]/20 text-[#38ef7d] border border-[#38ef7d]/40'
+                    ? 'bg-[#38ef7d]/20 text-[#38ef7d] border border-[#38ef7d]/40 shadow-sm'
                     : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
                 }`}
               >
@@ -93,9 +94,9 @@ export const PlayersView: React.FC<PlayersViewProps> = ({ onSelectPlayer }) => {
             ))}
           </div>
 
-          <div className="flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="text-gray-400">{t('max_price_filter')}:</span>
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
+            <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-[160px]">
+              <span className="text-gray-400 text-[11px] sm:text-xs shrink-0">{t('max_price_filter')}:</span>
               <input
                 type="range"
                 min="4.0"
@@ -103,24 +104,25 @@ export const PlayersView: React.FC<PlayersViewProps> = ({ onSelectPlayer }) => {
                 step="0.5"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
-                className="w-24 accent-[#38ef7d] cursor-pointer"
+                className="w-20 sm:w-24 accent-[#38ef7d] cursor-pointer"
               />
-              <span className="text-[#38ef7d] font-bold">£{maxPrice}M</span>
+              <span className="text-[#38ef7d] font-bold shrink-0">£{maxPrice}M</span>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              <span className="text-gray-400">{t('sort_by')}:</span>
+            <div className="flex items-center gap-1.5 flex-1 sm:flex-initial min-w-[170px]">
+              <span className="text-gray-400 text-[11px] sm:text-xs shrink-0">{t('sort_by')}:</span>
               <SearchableSelect
                 options={SORT_OPTIONS}
                 value={sortBy}
                 onChange={setSortBy}
                 searchable={false}
-                className="min-w-[170px]"
+                className="w-full sm:min-w-[170px]"
               />
             </div>
           </div>
         </div>
       </div>
+
 
       <div className="glass-card overflow-hidden">
         {loading ? (

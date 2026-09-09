@@ -87,7 +87,7 @@ export const TransfersView: React.FC<TransfersViewProps> = ({ onSelectPlayer }) 
               })}
             </div>
 
-            <div className="flex items-center justify-between pt-2 text-[11px] text-gray-400">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 text-[11px] text-gray-400">
               <span>{t('form')}: <strong className="text-amber-400">{item.player.form_score}</strong></span>
               <span>FDR: <strong className="text-cyan-400">{item.player.upcoming_fdr}</strong></span>
               <span>{t('total_pts')}: <strong className="text-white">{item.player.total_points}</strong></span>
@@ -98,3 +98,4 @@ export const TransfersView: React.FC<TransfersViewProps> = ({ onSelectPlayer }) 
     </div>
   );
 };
+

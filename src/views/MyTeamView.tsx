@@ -17,8 +17,10 @@ import {
   Sparkles
 } from 'lucide-react';
 import { fetchMyTeam } from '../services/api';
-import type { MyTeamResponse, EnrichedSquadPlayer, Player } from '../types';
+import type { MyTeamResponse, Player } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { PitchPlayerCard } from '../components/PitchPlayerCard';
+import { PlayerAvatar } from '../components/PlayerAvatar';
 
 interface MyTeamViewProps {
   onSelectPlayer: (player: Player) => void;
@@ -264,13 +266,7 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
                 {data.ai_advice.recommended_captain && (
                   <div className="bg-white/5 border border-amber-500/30 rounded-xl p-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shrink-0">
-                        <img 
-                          src={data.ai_advice.recommended_captain.photo_url || data.ai_advice.recommended_captain.shirt_url} 
-                          alt={data.ai_advice.recommended_captain.web_name}
-                          className="w-full h-full object-cover rounded-full bg-black/40"
-                        />
-                      </div>
+                      <PlayerAvatar player={data.ai_advice.recommended_captain} size="md" showShirt={true} />
                       <div>
                         <span className="text-xs font-bold text-white block">{data.ai_advice.recommended_captain.web_name}</span>
                         <span className="text-[10px] text-gray-400">{data.ai_advice.recommended_captain.team_name} • {data.ai_advice.recommended_captain.position_name}</span>
@@ -384,68 +380,64 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
             </div>
 
             {/* Pitch Container */}
-            <div className="relative w-full rounded-3xl p-6 md:p-8 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 border-2 border-emerald-500/40 shadow-2xl overflow-hidden min-h-[580px] flex flex-col justify-between">
+            <div className="relative w-full rounded-3xl px-1.5 py-3 sm:p-6 md:p-8 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 border-2 border-emerald-500/40 shadow-2xl overflow-hidden min-h-[480px] sm:min-h-[580px] flex flex-col justify-between">
               <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#38ef7d_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              <div className="absolute inset-x-8 top-0 h-24 border-b-2 border-emerald-400/30 rounded-b-3xl pointer-events-none"></div>
-              <div className="absolute inset-x-8 bottom-0 h-24 border-t-2 border-emerald-400/30 rounded-t-3xl pointer-events-none"></div>
+              <div className="absolute inset-x-4 sm:inset-x-8 top-0 h-20 sm:h-24 border-b-2 border-emerald-400/30 rounded-b-3xl pointer-events-none"></div>
+              <div className="absolute inset-x-4 sm:inset-x-8 bottom-0 h-20 sm:h-24 border-t-2 border-emerald-400/30 rounded-t-3xl pointer-events-none"></div>
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-emerald-400/30 pointer-events-none"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border-2 border-emerald-400/30 rounded-full pointer-events-none"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 border-2 border-emerald-400/30 rounded-full pointer-events-none"></div>
 
               {/* Goalkeeper */}
-              <div className="relative z-10 flex justify-center gap-4 py-2">
+              <div className="relative z-10 flex justify-center gap-2 sm:gap-4 py-1.5 sm:py-2">
                 {gkpList.map(player => (
-                  <PitchPlayerCard key={player.id} player={player} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} isCaptain={player.is_captain} isViceCaptain={player.is_vice_captain} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Defenders */}
-              <div className="relative z-10 flex justify-around gap-2 md:gap-6 py-2">
+              <div className="relative z-10 flex justify-around gap-1 sm:gap-4 md:gap-6 py-1.5 sm:py-2">
                 {defList.map(player => (
-                  <PitchPlayerCard key={player.id} player={player} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} isCaptain={player.is_captain} isViceCaptain={player.is_vice_captain} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Midfielders */}
-              <div className="relative z-10 flex justify-around gap-2 md:gap-6 py-2">
+              <div className="relative z-10 flex justify-around gap-1 sm:gap-4 md:gap-6 py-1.5 sm:py-2">
                 {midList.map(player => (
-                  <PitchPlayerCard key={player.id} player={player} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} isCaptain={player.is_captain} isViceCaptain={player.is_vice_captain} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Forwards */}
-              <div className="relative z-10 flex justify-center gap-6 md:gap-12 py-2">
+              <div className="relative z-10 flex justify-center gap-3 sm:gap-8 md:gap-12 py-1.5 sm:py-2">
                 {fwdList.map(player => (
-                  <PitchPlayerCard key={player.id} player={player} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} isCaptain={player.is_captain} isViceCaptain={player.is_vice_captain} onSelect={onSelectPlayer} />
                 ))}
               </div>
             </div>
 
             {/* Bench Strip Container */}
-            <div className="glass-card p-5 space-y-3 border-t-4 border-t-gray-500">
+            <div className="glass-card p-4 sm:p-5 space-y-3 border-t-4 border-t-gray-500">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">
                   {t('bench_substitutes')}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 {data.bench.map((player, idx) => (
                   <div
                     key={player.id}
                     onClick={() => onSelectPlayer(player)}
-                    className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:border-[#38ef7d] transition-all cursor-pointer flex items-center gap-3 group"
+                    className="p-2.5 sm:p-3 bg-white/5 border border-white/10 rounded-2xl hover:border-[#38ef7d] transition-all cursor-pointer flex items-center gap-2.5 sm:gap-3 group min-w-0"
                   >
                     <span className="w-5 h-5 rounded-full bg-white/10 text-gray-300 text-[10px] font-bold flex items-center justify-center shrink-0">
                       {idx + 1}
                     </span>
-                    <img 
-                      src={player.photo_url || player.shirt_url} 
-                      alt={player.web_name}
-                      className="w-10 h-10 object-contain drop-shadow group-hover:scale-105 transition-transform" 
-                    />
+                    <PlayerAvatar player={player} size="sm" showShirt={true} />
                     <div className="min-w-0">
                       <span className="text-xs font-bold text-white truncate block">{player.web_name}</span>
-                      <span className="text-[10px] text-gray-400 block">{player.position_name} • £{player.price}M</span>
+                      <span className="text-[10px] text-gray-400 block truncate">{player.position_name} • £{player.price}M</span>
                     </div>
                   </div>
                 ))}
@@ -454,45 +446,6 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
           </div>
         </div>
       )}
-    </div>
-  );
-};
-
-/* Helper Card for Pitch Rendering */
-const PitchPlayerCard: React.FC<{ player: EnrichedSquadPlayer; onSelect: (player: Player) => void }> = ({ player, onSelect }) => {
-  return (
-    <div 
-      onClick={() => onSelect(player)}
-      className="flex flex-col items-center group cursor-pointer transition-transform hover:scale-105 select-none"
-    >
-      <div className="relative">
-        {player.is_captain && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-400 text-[#04120a] font-extrabold text-[10px] flex items-center justify-center shadow-lg border border-amber-300 z-20">
-            C
-          </span>
-        )}
-        {player.is_vice_captain && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gray-300 text-[#04120a] font-extrabold text-[10px] flex items-center justify-center shadow-lg border border-white z-20">
-            V
-          </span>
-        )}
-
-        <img 
-          src={player.photo_url || player.shirt_url} 
-          alt={player.web_name}
-          className="w-12 h-14 md:w-16 md:h-18 object-contain drop-shadow-xl filter group-hover:brightness-110 transition-all"
-        />
-      </div>
-
-      <div className="mt-1 px-2.5 py-1 bg-[#070a12]/90 backdrop-blur-md border border-white/20 rounded-xl text-center shadow-lg min-w-[70px] md:min-w-[90px]">
-        <span className="text-[11px] md:text-xs font-extrabold text-white block truncate leading-tight">
-          {player.web_name}
-        </span>
-        <div className="flex items-center justify-center gap-1 mt-0.5">
-          <span className="text-[9px] text-gray-300">£{player.price}M</span>
-          <span className="text-[9px] font-bold text-[#38ef7d]">{player.expected_points || player.form_score} xP</span>
-        </div>
-      </div>
     </div>
   );
 };

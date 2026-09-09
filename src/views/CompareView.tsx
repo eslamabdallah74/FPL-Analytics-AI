@@ -56,7 +56,7 @@ export const CompareView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className={`glass-card p-4 transition-all duration-200 ${openSelect === 'p1' ? 'relative z-50 ring-2 ring-indigo-500/50' : 'relative z-20'}`}>
+        <div className={`glass-card p-4 transition-all duration-200 ${openSelect === 'p1' ? 'relative z-30 ring-2 ring-indigo-500/50' : 'relative z-10'}`}>
           <SearchablePlayerSelect
             players={allPlayers}
             selectedId={p1Id}
@@ -68,7 +68,7 @@ export const CompareView: React.FC = () => {
           />
         </div>
 
-        <div className={`glass-card p-4 transition-all duration-200 ${openSelect === 'p2' ? 'relative z-50 ring-2 ring-indigo-500/50' : 'relative z-10'}`}>
+        <div className={`glass-card p-4 transition-all duration-200 ${openSelect === 'p2' ? 'relative z-30 ring-2 ring-indigo-500/50' : 'relative z-10'}`}>
           <SearchablePlayerSelect
             players={allPlayers}
             selectedId={p2Id}
@@ -95,20 +95,28 @@ export const CompareView: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-extrabold text-indigo-400 uppercase tracking-widest block">
+              <div className="space-y-1.5 text-start">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-black text-indigo-400 uppercase tracking-widest">
                     {t('verdict_winner')}
                   </span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     RECOMMENDED PICK
                   </span>
                 </div>
-                <h2 className="text-2xl font-black text-white mt-1 flex items-center gap-2">
-                  <span>{winnerPlayer.web_name}</span>
-                  <span className="text-sm font-normal text-gray-300">({winnerPlayer.team_name} • £{winnerPlayer.price}M)</span>
-                </h2>
-                <p className="text-xs text-gray-300 mt-1 max-w-xl">
+
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+                    {winnerPlayer.web_name}
+                  </h2>
+                  <div className="text-xs font-semibold text-gray-300 flex items-center gap-1.5 mt-0.5">
+                    <span>{winnerPlayer.team_name}</span>
+                    <span>•</span>
+                    <span dir="ltr" className="font-mono font-bold text-[#38ef7d]">£{winnerPlayer.price}M</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-300 max-w-xl leading-relaxed pt-1">
                   {isAr 
                     ? `يوصى باختيار ${winnerPlayer.web_name} متفوقاً في المقارنة، بفضل النقاط المتوقعة ومعدل الأداء والمباريات القادمة.`
                     : result.verdict}
@@ -250,51 +258,51 @@ export const CompareView: React.FC = () => {
           ) : null}
 
           {/* Detailed 12-Metric Head-to-Head Comparison Matrix */}
-          <div className="glass-card overflow-hidden p-5">
-            <div className="grid grid-cols-2 gap-4 pb-4 border-b border-white/10">
-              <div className="flex items-center gap-3">
-                <PlayerAvatar player={result.player1} size="lg" showShirt={true} />
-                <div>
-                  <h3 className="text-lg font-bold text-white">{result.player1.web_name}</h3>
-                  <p className="text-xs text-gray-400">{result.player1.team_name} • £{result.player1.price}M</p>
+          <div className="glass-card overflow-hidden p-4 sm:p-5">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 pb-4 border-b border-white/10">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <PlayerAvatar player={result.player1} size="md" showShirt={true} />
+                <div className="min-w-0">
+                  <h3 className="text-sm sm:text-lg font-bold text-white truncate">{result.player1.web_name}</h3>
+                  <p className="text-[10px] sm:text-xs text-gray-400 truncate">{result.player1.team_name} • £{result.player1.price}M</p>
                 </div>
               </div>
-              <div className="flex items-center justify-end gap-3 text-right">
-                <div>
-                  <h3 className="text-lg font-bold text-white">{result.player2.web_name}</h3>
-                  <p className="text-xs text-gray-400">{result.player2.team_name} • £{result.player2.price}M</p>
+              <div className="flex items-center justify-end gap-2 sm:gap-3 text-right min-w-0">
+                <div className="min-w-0">
+                  <h3 className="text-sm sm:text-lg font-bold text-white truncate">{result.player2.web_name}</h3>
+                  <p className="text-[10px] sm:text-xs text-gray-400 truncate">{result.player2.team_name} • £{result.player2.price}M</p>
                 </div>
-                <PlayerAvatar player={result.player2} size="lg" showShirt={true} />
+                <PlayerAvatar player={result.player2} size="md" showShirt={true} />
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
                 <thead>
-                  <tr className="border-b border-white/10 text-gray-400 uppercase">
-                    <th className="py-3">{result.player1.web_name}</th>
-                    <th className="py-3 text-center">{isAr ? 'مؤشر الإحصائية' : 'Metric Category'}</th>
-                    <th className="py-3 text-right">{result.player2.web_name}</th>
+                  <tr className="border-b border-white/10 text-gray-400 uppercase text-[10px] sm:text-xs">
+                    <th className="py-2.5 px-2">{result.player1.web_name}</th>
+                    <th className="py-2.5 px-2 text-center">{isAr ? 'المعيار' : 'Metric'}</th>
+                    <th className="py-2.5 px-2 text-right">{result.player2.web_name}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-sm">
+                <tbody className="divide-y divide-white/5 text-xs sm:text-sm">
                   {result.matrix.map((row, i) => (
                     <tr key={i} className="hover:bg-white/5 transition-colors">
-                      <td className={`py-3 ${row.winner === 'player1' ? 'text-[#38ef7d] font-bold' : 'text-gray-300'}`}>
-                        <div className="flex items-center gap-2">
-                          {row.winner === 'player1' && <CheckCircle className="w-4 h-4 text-[#38ef7d]" />}
+                      <td className={`py-2.5 px-2 ${row.winner === 'player1' ? 'text-[#38ef7d] font-bold' : 'text-gray-300'}`}>
+                        <div className="flex items-center gap-1.5">
+                          {row.winner === 'player1' && <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#38ef7d] shrink-0" />}
                           <span>{typeof row.player1_val === 'number' ? row.player1_val.toLocaleString() : row.player1_val}</span>
                         </div>
                       </td>
 
-                      <td className="py-3 text-center font-semibold text-gray-400 text-xs">
+                      <td className="py-2.5 px-2 text-center font-semibold text-gray-400 text-[10px] sm:text-xs">
                         {row.metric}
                       </td>
 
-                      <td className={`py-3 text-right ${row.winner === 'player2' ? 'text-[#38ef7d] font-bold' : 'text-gray-300'}`}>
-                        <div className="flex items-center justify-end gap-2">
+                      <td className={`py-2.5 px-2 text-right ${row.winner === 'player2' ? 'text-[#38ef7d] font-bold' : 'text-gray-300'}`}>
+                        <div className="flex items-center justify-end gap-1.5">
                           <span>{typeof row.player2_val === 'number' ? row.player2_val.toLocaleString() : row.player2_val}</span>
-                          {row.winner === 'player2' && <CheckCircle className="w-4 h-4 text-[#38ef7d]" />}
+                          {row.winner === 'player2' && <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#38ef7d] shrink-0" />}
                         </div>
                       </td>
                     </tr>
@@ -303,6 +311,7 @@ export const CompareView: React.FC = () => {
               </table>
             </div>
           </div>
+
         </div>
       ) : (
         <div className="glass-card p-12 text-center flex flex-col items-center justify-center space-y-3">

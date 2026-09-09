@@ -100,7 +100,7 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
               {getRationaleText(c)}
             </p>
 
-            <div className="flex items-center justify-between pt-1 text-[11px] text-gray-400">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-gray-400">
               <span>{t('form')}: <strong className="text-amber-400">{c.player.form_score}</strong></span>
               <span>FDR: <strong className="text-emerald-400">{c.player.upcoming_fdr}</strong></span>
               <span>{t('rotation_risk')}: <strong className="text-white">{isAr ? (c.player.rotation_risk === 'Low' ? 'منخفض' : 'متوسط') : c.player.rotation_risk}</strong></span>
@@ -111,3 +111,4 @@ export const CaptainView: React.FC<CaptainViewProps> = ({ onSelectPlayer }) => {
     </div>
   );
 };
+

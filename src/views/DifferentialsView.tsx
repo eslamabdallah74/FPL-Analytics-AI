@@ -97,7 +97,7 @@ export const DifferentialsView: React.FC<DifferentialsViewProps> = ({ onSelectPl
               className="w-full accent-cyan-400 cursor-pointer h-2 bg-white/10 rounded-lg"
             />
 
-            <div className="flex items-center gap-1.5 pt-1">
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
               {[3.0, 5.0, 8.0, 10.0, 15.0].map((val) => (
                 <button
                   key={val}
@@ -116,13 +116,13 @@ export const DifferentialsView: React.FC<DifferentialsViewProps> = ({ onSelectPl
         </div>
 
         {/* Position Filter Tabs */}
-        <div className="relative z-10 flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
-          <span className="text-xs text-gray-400 font-bold me-2">{isAr ? 'تصفية المركز:' : 'Filter Position:'}</span>
+        <div className="relative z-10 flex items-center gap-2 pt-4 border-t border-white/10 overflow-x-auto no-scrollbar pb-1 min-w-0">
+          <span className="text-xs text-gray-400 font-bold me-1 shrink-0">{isAr ? 'تصفية المركز:' : 'Filter Position:'}</span>
           {['', 'GKP', 'DEF', 'MID', 'FWD'].map((pos) => (
             <button
               key={pos}
               onClick={() => setPositionFilter(pos)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 positionFilter === pos
                   ? 'bg-gradient-to-r from-cyan-500 to-teal-400 text-black shadow-lg shadow-cyan-500/25 scale-105'
                   : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-white/10'
@@ -133,6 +133,7 @@ export const DifferentialsView: React.FC<DifferentialsViewProps> = ({ onSelectPl
           ))}
         </div>
       </div>
+
 
       {/* DIFFERENTIAL CARDS GRID */}
       {loading ? (
@@ -163,6 +164,7 @@ export const DifferentialsView: React.FC<DifferentialsViewProps> = ({ onSelectPl
                   <img
                     src={p.shirt_url}
                     alt=""
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     className="absolute -right-6 -bottom-6 w-44 h-44 object-contain opacity-10 pointer-events-none group-hover:scale-110 group-hover:opacity-20 transition-all duration-500"
                   />
                 )}

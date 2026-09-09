@@ -83,7 +83,7 @@ export const SearchablePlayerSelect: React.FC<SearchablePlayerSelectProps> = ({
   }, [filteredPlayers]);
 
   return (
-    <div className={`relative w-full ${isOpen ? 'z-[9999]' : 'z-20'}`} ref={dropdownRef}>
+    <div className={`relative w-full ${isOpen ? 'z-[900]' : 'z-20'}`} ref={dropdownRef}>
       {label && (
         <label className="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-2">
           {label}
@@ -94,7 +94,7 @@ export const SearchablePlayerSelect: React.FC<SearchablePlayerSelectProps> = ({
       <button
         type="button"
         onClick={() => toggleOpen(!isOpen)}
-        className="w-full bg-white/5 border border-white/10 hover:border-indigo-400/60 rounded-xl p-3 flex items-center justify-between text-left transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400/40 min-h-[58px]"
+        className="w-full bg-white/5 border border-white/10 hover:border-indigo-400/60 rounded-xl p-3 flex items-center justify-between text-start transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400/40 min-h-[58px]"
       >
         {loading ? (
           <div className="flex items-center gap-2.5 py-1 text-indigo-300 font-mono text-xs">
@@ -127,24 +127,24 @@ export const SearchablePlayerSelect: React.FC<SearchablePlayerSelectProps> = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-[9999] left-0 right-0 mt-2 bg-[#0d121f] border border-indigo-500/40 rounded-2xl shadow-2xl shadow-black/90 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute z-[900] start-0 end-0 mt-2 bg-[#0d121f] border border-indigo-500/40 rounded-2xl shadow-2xl shadow-black/90 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150">
           {/* Search Header */}
           <div className="p-3 border-b border-white/10 space-y-2 bg-[#090d16]">
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-indigo-400" />
+              <Search className="w-4 h-4 absolute start-3 top-3 text-indigo-400" />
               <input
                 ref={inputRef}
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={placeholder}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-400 focus:bg-black/40 font-mono transition-all"
+                className="w-full bg-white/5 border border-white/10 rounded-xl ps-9 pe-8 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-400 focus:bg-black/40 font-mono transition-all text-start"
               />
               {search && (
                 <button
                   type="button"
                   onClick={() => setSearch('')}
-                  className="absolute right-2.5 top-2.5 text-gray-400 hover:text-white"
+                  className="absolute end-2.5 top-2.5 text-gray-400 hover:text-white"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -194,7 +194,7 @@ export const SearchablePlayerSelect: React.FC<SearchablePlayerSelectProps> = ({
                         toggleOpen(false);
                         setSearch('');
                       }}
-                      className={`w-full p-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
+                      className={`w-full p-2.5 flex items-center justify-between text-start transition-colors cursor-pointer ${
                         isSelected
                           ? 'bg-indigo-500/20 text-white'
                           : 'hover:bg-white/10 text-gray-200'
@@ -218,7 +218,7 @@ export const SearchablePlayerSelect: React.FC<SearchablePlayerSelectProps> = ({
                       </div>
 
                       {isSelected && (
-                        <Check className="w-4 h-4 text-indigo-400 shrink-0 ml-2" />
+                        <Check className="w-4 h-4 text-indigo-400 shrink-0 ms-2" />
                       )}
                     </button>
                   );

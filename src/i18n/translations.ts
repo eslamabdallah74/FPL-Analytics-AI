@@ -2,17 +2,34 @@ export const translations = {
   en: {
     // Header & Nav
     dashboard: "Dashboard",
-    team_builder: "Build My Best Team",
-    my_team: "Personalized Squad Analyzer",
+    team_builder: "Build Best Team",
+    my_team: "Squad Analyzer",
     players: "Players Matrix",
     fixtures: "Fixture Planner",
     transfers: "Transfer Targets",
     captains: "Captaincy Engine",
     differentials: "Differentials",
     compare: "H2H Compare",
-    strategy: "Platform Features",
+    strategy: "Platform Strategy",
+    ai_chat: "AI FPL Assistant",
     ai_engine: "AI Analytics Engine",
     gw_live: "GW {{gw}} LIVE",
+
+    // Nav Category Dropdowns
+    nav_group_squad: "Squad & Overview",
+    nav_group_analytics: "Analytics & Market",
+    nav_group_tools: "Planner & Tools",
+    nav_group_ai: "AI Copilot 🤖",
+
+    // AI Chat Page
+    ai_chat_title: "FPL AI Copilot 🤖",
+    ai_chat_subtitle: "Experimental Algorithmic Advisor for Fantasy Premier League",
+    ai_chat_desc: "Ask any tactical FPL question. Evaluates real-time expected points (xP), fixture difficulty runs, form, rotation risks, and set-piece roles.",
+    ask_ai_placeholder: "Ask about transfers, captain picks, differentials, chips...",
+    clear_chat: "Clear Chat",
+    api_key_settings: "API Key Settings",
+    suggested_questions: "Suggested Quick Prompts:",
+    ai_thinking: "Analyzing FPL metrics & database...",
 
     // General & Common
     loading: "Loading statistics and metrics...",
@@ -175,7 +192,7 @@ export const translations = {
     // Header & Nav
     dashboard: "لوحة التحكم",
     team_builder: "بناء أفضل تشكيلة",
-    my_team: "محلل تشكيلات الفانتسي",
+    my_team: "محلل التشكيلة",
     players: "مصفوفة اللاعبين",
     fixtures: "مخطط المباريات",
     transfers: "أهداف الانتقالات",
@@ -183,8 +200,25 @@ export const translations = {
     differentials: "الفروقات",
     compare: "مقارنة لاعبين",
     strategy: "ميزات المنصة",
+    ai_chat: "مساعد الفانتسي الذكي",
     ai_engine: "محرك الذكاء الاصطناعي",
     gw_live: "الجولة {{gw}} مباشرة",
+
+    // Nav Category Dropdowns
+    nav_group_squad: "الرئيسية والتشكيلة",
+    nav_group_analytics: "التحليلات والسوق",
+    nav_group_tools: "الأدوات والتخطيط",
+    nav_group_ai: "ذكاء الفانتسي 🤖",
+
+    // AI Chat Page
+    ai_chat_title: "مساعد الفانتسي الذكي 🤖",
+    ai_chat_subtitle: "المستشار الخوارزمي التجريبي لفانتسي الدوري الإنجليزي",
+    ai_chat_desc: "استشر الذكاء الاصطناعي في أي قرار تكتيكي. يحلل النقاط المتوقعة (xP)، جدول المباريات، الفورمة، ومخاطر التدوير.",
+    ask_ai_placeholder: "اسأل عن التغييرات، اختيار الكابتن، الجواهر الخفية، الخطة...",
+    clear_chat: "مسح المحادثة",
+    api_key_settings: "إعدادات المفتاح",
+    suggested_questions: "مقترحات أسئلة سريعة:",
+    ai_thinking: "جاري تحليل بيانات الفانتسي وقراءة المؤشرات...",
 
     // General & Common
     loading: "جاري تحميل الإحصائيات والإشارات...",
@@ -346,3 +380,4 @@ export const translations = {
 
 export type Language = 'en' | 'ar';
 export type TranslationKey = keyof typeof translations.en;
+

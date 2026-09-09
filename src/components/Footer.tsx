@@ -10,7 +10,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const { t } = useLanguage();
 
   return (
-    <footer className="border-t border-white/10 bg-[#070a12] pt-12 pb-8 px-4 lg:px-8 mt-16">
+    <footer className="border-t border-white/10 bg-[#070a12] pt-12 pb-8 px-4 lg:px-8 mt-16 text-start">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Column 1: Brand */}

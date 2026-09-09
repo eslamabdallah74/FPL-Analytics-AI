@@ -10,6 +10,8 @@ import {
   ShieldCheck,
   AlertTriangle
 } from 'lucide-react';
+import { PitchPlayerCard } from '../components/PitchPlayerCard';
+import { PlayerAvatar } from '../components/PlayerAvatar';
 import { generateOptimalSquad } from '../services/api';
 import type { OptimalSquadResponse, Player } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -183,66 +185,62 @@ export const SquadGeneratorView: React.FC<SquadGeneratorViewProps> = ({ onSelect
             </h2>
 
             {/* Pitch Container */}
-            <div className="relative w-full rounded-3xl p-6 md:p-8 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 border-2 border-emerald-500/40 shadow-2xl overflow-hidden min-h-[580px] flex flex-col justify-between">
+            <div className="relative w-full rounded-3xl px-1.5 py-3 sm:p-6 md:p-8 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 border-2 border-emerald-500/40 shadow-2xl overflow-hidden min-h-[480px] sm:min-h-[580px] flex flex-col justify-between">
               <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#38ef7d_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              <div className="absolute inset-x-8 top-0 h-24 border-b-2 border-emerald-400/30 rounded-b-3xl pointer-events-none"></div>
-              <div className="absolute inset-x-8 bottom-0 h-24 border-t-2 border-emerald-400/30 rounded-t-3xl pointer-events-none"></div>
+              <div className="absolute inset-x-4 sm:inset-x-8 top-0 h-20 sm:h-24 border-b-2 border-emerald-400/30 rounded-b-3xl pointer-events-none"></div>
+              <div className="absolute inset-x-4 sm:inset-x-8 bottom-0 h-20 sm:h-24 border-t-2 border-emerald-400/30 rounded-t-3xl pointer-events-none"></div>
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-emerald-400/30 pointer-events-none"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border-2 border-emerald-400/30 rounded-full pointer-events-none"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 border-2 border-emerald-400/30 rounded-full pointer-events-none"></div>
 
               {/* Pitch GKP */}
-              <div className="relative z-10 flex justify-center gap-4 py-2">
+              <div className="relative z-10 flex justify-center gap-2 sm:gap-4 py-1.5 sm:py-2">
                 {gkpList.map(player => (
-                  <GeneratorPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Pitch DEF */}
-              <div className="relative z-10 flex justify-around gap-2 md:gap-6 py-2">
+              <div className="relative z-10 flex justify-around gap-1 sm:gap-4 md:gap-6 py-1.5 sm:py-2">
                 {defList.map(player => (
-                  <GeneratorPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Pitch MID */}
-              <div className="relative z-10 flex justify-around gap-2 md:gap-6 py-2">
+              <div className="relative z-10 flex justify-around gap-1 sm:gap-4 md:gap-6 py-1.5 sm:py-2">
                 {midList.map(player => (
-                  <GeneratorPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
                 ))}
               </div>
 
               {/* Pitch FWD */}
-              <div className="relative z-10 flex justify-center gap-6 md:gap-12 py-2">
+              <div className="relative z-10 flex justify-center gap-3 sm:gap-8 md:gap-12 py-1.5 sm:py-2">
                 {fwdList.map(player => (
-                  <GeneratorPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
+                  <PitchPlayerCard key={player.id} player={player} captainId={data.captain?.id} viceId={data.vice_captain?.id} onSelect={onSelectPlayer} />
                 ))}
               </div>
             </div>
 
             {/* Bench Substitutes */}
-            <div className="glass-card p-5 space-y-3 border-t-4 border-t-gray-500">
+            <div className="glass-card p-4 sm:p-5 space-y-3 border-t-4 border-t-gray-500">
               <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">
                 {t('bench_substitutes')}
               </span>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 {data.bench.map((player, idx) => (
                   <div
                     key={player.id}
                     onClick={() => onSelectPlayer(player)}
-                    className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:border-[#38ef7d] transition-all cursor-pointer flex items-center gap-3 group"
+                    className="p-2.5 sm:p-3 bg-white/5 border border-white/10 rounded-2xl hover:border-[#38ef7d] transition-all cursor-pointer flex items-center gap-2.5 sm:gap-3 group min-w-0"
                   >
                     <span className="w-5 h-5 rounded-full bg-white/10 text-gray-300 text-[10px] font-bold flex items-center justify-center shrink-0">
                       {idx + 1}
                     </span>
-                    <img 
-                      src={player.photo_url || player.shirt_url} 
-                      alt={player.web_name}
-                      className="w-10 h-10 object-contain drop-shadow group-hover:scale-105 transition-transform" 
-                    />
+                    <PlayerAvatar player={player} size="sm" />
                     <div className="min-w-0">
                       <span className="text-xs font-bold text-white truncate block">{player.web_name}</span>
-                      <span className="text-[10px] text-gray-400 block">{player.position_name} • £{player.price}M</span>
+                      <span className="text-[10px] text-gray-400 block truncate">{player.position_name} • £{player.price}M</span>
                     </div>
                   </div>
                 ))}
@@ -257,22 +255,18 @@ export const SquadGeneratorView: React.FC<SquadGeneratorViewProps> = ({ onSelect
               <span>{t('why_selected')}</span>
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {data.selection_reasons.map((item, idx) => (
                 <div 
                   key={idx}
                   onClick={() => onSelectPlayer(item.player)}
-                  className="glass-card p-4 space-y-2 hover:border-[#38ef7d] transition-all cursor-pointer"
+                  className="glass-card p-4 space-y-2 hover:border-[#38ef7d] transition-all cursor-pointer min-w-0"
                 >
                   <div className="flex items-center gap-3">
-                    <img 
-                      src={item.player.photo_url || item.player.shirt_url} 
-                      alt={item.player.web_name}
-                      className="w-10 h-10 object-contain drop-shadow" 
-                    />
-                    <div>
-                      <h4 className="text-sm font-bold text-white">{item.player.web_name}</h4>
-                      <p className="text-[10px] text-gray-400">{item.player.team_name} • £{item.player.price}M</p>
+                    <PlayerAvatar player={item.player} size="md" />
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-bold text-white truncate">{item.player.web_name}</h4>
+                      <p className="text-[10px] text-gray-400 truncate">{item.player.team_name} • £{item.player.price}M</p>
                     </div>
                   </div>
 
@@ -289,7 +283,7 @@ export const SquadGeneratorView: React.FC<SquadGeneratorViewProps> = ({ onSelect
                       return (
                         <div key={rIdx} className="flex items-start gap-1.5">
                           <span className="text-emerald-400 font-bold shrink-0 mt-0.5">•</span>
-                          <span>{displayReason}</span>
+                          <span className="leading-snug">{displayReason}</span>
                         </div>
                       );
                     })}
@@ -300,69 +294,6 @@ export const SquadGeneratorView: React.FC<SquadGeneratorViewProps> = ({ onSelect
           </div>
         </div>
       )}
-    </div>
-  );
-};
-
-/* Helper Pitch Card for Generator with Position Accents */
-const GeneratorPlayerCard: React.FC<{ 
-  player: Player; 
-  captainId?: number; 
-  viceId?: number; 
-  onSelect: (player: Player) => void 
-}> = ({ player, captainId, viceId, onSelect }) => {
-  const isCap = captainId === player.id;
-  const isVc = viceId === player.id;
-
-  // Position accent colors
-  let posColor = 'border-[#39ff88]';
-  let posBg = 'bg-[#39ff88]/10';
-  if (player.position_name === 'GKP') {
-    posColor = 'border-[#ffd700]';
-    posBg = 'bg-[#ffd700]/10';
-  } else if (player.position_name === 'DEF') {
-    posColor = 'border-[#00d2ff]';
-    posBg = 'bg-[#00d2ff]/10';
-  } else if (player.position_name === 'FWD') {
-    posColor = 'border-[#ff5a5a]';
-    posBg = 'bg-[#ff5a5a]/10';
-  }
-
-  return (
-    <div 
-      onClick={() => onSelect(player)}
-      className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 select-none"
-    >
-      <div className="relative">
-        {isCap && (
-          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#ffd700] text-[#07110d] font-black text-[10px] flex items-center justify-center shadow-lg border border-white z-20 animate-pulse">
-            C
-          </span>
-        )}
-        {isVc && (
-          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-slate-200 text-[#07110d] font-black text-[10px] flex items-center justify-center shadow-lg border border-slate-400 z-20">
-            V
-          </span>
-        )}
-
-        <div className={`p-1.5 rounded-full border-2 ${posColor} ${posBg} backdrop-blur-md shadow-xl transition-all group-hover:scale-105`}>
-          <img 
-            src={player.photo_url || player.shirt_url} 
-            alt={player.web_name}
-            className="w-11 h-13 md:w-14 md:h-16 object-contain drop-shadow-xl filter group-hover:brightness-110 transition-all"
-          />
-        </div>
-      </div>
-
-      <div className={`mt-1.5 px-2.5 py-1 bg-[#07110d]/90 backdrop-blur-md border ${posColor}/40 rounded-lg text-center shadow-2xl min-w-[75px] md:min-w-[95px]`}>
-        <span className="text-[11px] md:text-xs font-bold text-white block truncate leading-tight">
-          {player.web_name}
-        </span>
-        <div className="flex items-center justify-center gap-1.5 mt-0.5">
-          <span className="text-[9px] text-gray-400">£{player.price}M</span>
-          <span className="text-[9px] font-black text-[#39ff88]">{player.expected_points || player.form_score} xP</span>
-        </div>
-      </div>
     </div>
   );
 };

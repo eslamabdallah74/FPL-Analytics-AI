@@ -55,34 +55,35 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, on
   return (
     <div 
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md"
     >
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 text-white relative"
+        className="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 text-white relative custom-scrollbar"
       >
         <button
           onClick={onClose}
-          className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors z-10`}
+          className={`absolute top-3 ${isRTL ? 'left-3' : 'right-3'} p-2 text-gray-400 hover:text-white rounded-xl bg-white/5 hover:bg-white/10 transition-colors z-10`}
           title={t('close')}
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-5 mb-4 border-b border-white/10 pb-4">
-          <PlayerAvatar player={player} size="xl" showShirt={true} />
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold tracking-tight">{player.web_name}</h2>
+        <div className="flex items-center gap-3 sm:gap-5 mb-4 border-b border-white/10 pb-4 pr-8">
+          <PlayerAvatar player={player} size="lg" showShirt={true} />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight truncate">{player.web_name}</h2>
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#38ef7d]/20 text-[#38ef7d] border border-[#38ef7d]/30">
                 {player.position_name}
               </span>
             </div>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-gray-400 mt-0.5 truncate">
               {player.first_name} {player.second_name} • <span className="text-white font-semibold">{player.team_name}</span>
             </p>
           </div>
         </div>
+
 
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center">
@@ -261,7 +262,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, on
                 <p className="text-sm text-gray-400 text-center py-4">{t('loading')}</p>
               ) : history.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left">
+                  <table className="w-full text-xs text-start">
                     <thead>
                       <tr className="text-gray-400 border-b border-white/10">
                         <th className="py-2">{t('gw')}</th>

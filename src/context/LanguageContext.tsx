@@ -13,13 +13,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('fpl_lang') as Language;
-    return saved === 'ar' ? 'ar' : 'en';
+    const savedLocal = localStorage.getItem('fpl_lang') as Language;
+    const savedSession = sessionStorage.getItem('fpl_lang') as Language;
+    const saved = savedLocal || savedSession;
+    return saved === 'en' ? 'en' : 'ar'; // Default language is Arabic
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('fpl_lang', lang);
+    sessionStorage.setItem('fpl_lang', lang);
   };
 
   const toggleLanguage = () => {
@@ -32,8 +35,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const t = (key: TranslationKey, params?: Record<string, string | number>): string => {
-    const dict = translations[language] || translations.en;
-    let str = dict[key] || translations.en[key] || String(key);
+    const dict = translations[language] || translations.ar;
+    let str = dict[key] || translations.ar[key] || translations.en[key] || String(key);
     if (params) {
       Object.entries(params).forEach(([pKey, pVal]) => {
         str = str.replace(`{{${pKey}}}`, String(pVal));
@@ -54,6 +57,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     </LanguageContext.Provider>
   );
 };
+
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);

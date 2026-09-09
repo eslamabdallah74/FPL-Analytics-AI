@@ -109,21 +109,21 @@ export const FixturesView: React.FC = () => {
                     {item.avg_fdr}
                   </td>
 
-                  <td className="py-3 px-2">
-                    <div className="flex gap-2 justify-center">
+                  <td className="py-3 px-1.5 sm:px-2">
+                    <div className="flex gap-1.5 sm:gap-2 justify-center">
                       {item.fixtures.map((f, i) => (
                         <div
                           key={i}
-                          className={`px-2.5 py-1.5 rounded-xl border text-center font-bold text-[11px] min-w-[72px] flex flex-col items-center justify-between ${
+                          className={`px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl border text-center font-bold text-[10px] sm:text-[11px] min-w-[54px] sm:min-w-[72px] flex flex-col items-center justify-between ${
                             f.difficulty <= 2 ? 'fdr-1' : f.difficulty === 3 ? 'fdr-3' : 'fdr-5'
                           }`}
                         >
-                          <span className="block text-[9px] opacity-70">GW{f.event}</span>
-                          <div className="flex items-center gap-1 my-1">
+                          <span className="block text-[8px] sm:text-[9px] opacity-70">GW{f.event}</span>
+                          <div className="flex items-center gap-0.5 sm:gap-1 my-0.5 sm:my-1">
                             <TeamBadge shirtUrl={f.opponent_shirt_url} badgeUrl={f.opponent_badge_url} teamCode={f.opponent_code} teamName={f.opponent_name} size="xs" />
-                            <span className="block font-extrabold">{f.opponent_short}</span>
+                            <span className="block font-extrabold text-[9px] sm:text-[11px]">{f.opponent_short}</span>
                           </div>
-                          <span className="block text-[9px] opacity-80">{f.is_home ? (isAr ? '(ملعبه)' : '(H)') : (isAr ? '(خارج)' : '(A)')}</span>
+                          <span className="block text-[8px] sm:text-[9px] opacity-80">{f.is_home ? (isAr ? '(ملعبه)' : '(H)') : (isAr ? '(خارج)' : '(A)')}</span>
                         </div>
                       ))}
                     </div>
@@ -137,3 +137,4 @@ export const FixturesView: React.FC = () => {
     </div>
   );
 };
+
