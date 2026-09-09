@@ -30,7 +30,7 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
   const { t, language } = useLanguage();
   const isAr = language === 'ar';
 
-  const [teamId, setTeamId] = useState<string>('1');
+  const [teamId, setTeamId] = useState<string>('7944239');
   const [data, setData] = useState<MyTeamResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +56,7 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
   };
 
   useEffect(() => {
-    handleSyncTeam('1');
+    handleSyncTeam('7944239');
   }, []);
 
   const gkpList = data?.starting_xi.filter(p => p.position_name === 'GKP') || [];
@@ -64,11 +64,18 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
   const midList = data?.starting_xi.filter(p => p.position_name === 'MID') || [];
   const fwdList = data?.starting_xi.filter(p => p.position_name === 'FWD') || [];
 
+  const demoTeamIds = [
+    { id: '7944239', name: 'SOSY' },
+    { id: '5011061', name: 'Sezo' },
+    { id: '2830159', name: 'Mr Dracula' },
+    { id: '1', name: 'FPL #1' }
+  ];
+
   return (
     <div className="space-y-8">
       {/* Header & FPL Team ID Sync Section */}
       <div className="glass-card p-6 border-l-4 border-l-[#38ef7d] bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent space-y-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full bg-[#38ef7d]/20 text-[#38ef7d] text-[10px] font-bold uppercase tracking-wider border border-[#38ef7d]/30">
@@ -86,20 +93,22 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
           </div>
 
           {/* Quick Demo Selector */}
-          <div className="flex items-center gap-2 text-xs text-gray-400 shrink-0">
-            <span>{isAr ? 'أمثلة سريعة:' : 'Quick Demos:'}</span>
-            <button 
-              onClick={() => { setTeamId('1'); handleSyncTeam('1'); }}
-              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold transition-all cursor-pointer"
-            >
-              ID: 1
-            </button>
-            <button 
-              onClick={() => { setTeamId('12345'); handleSyncTeam('12345'); }}
-              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold transition-all cursor-pointer"
-            >
-              ID: 12345
-            </button>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400 shrink-0">
+            <span className="font-semibold">{isAr ? 'أمثلة تجريبية:' : 'Example Teams:'}</span>
+            {demoTeamIds.map((demo) => (
+              <button
+                key={demo.id}
+                type="button"
+                onClick={() => { setTeamId(demo.id); handleSyncTeam(demo.id); }}
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer border ${
+                  teamId === demo.id
+                    ? 'bg-[#38ef7d] text-black border-[#38ef7d] shadow-md shadow-[#38ef7d]/20'
+                    : 'bg-white/10 hover:bg-white/20 text-white border-white/10'
+                }`}
+              >
+                {demo.name} ({demo.id})
+              </button>
+            ))}
           </div>
         </div>
 
