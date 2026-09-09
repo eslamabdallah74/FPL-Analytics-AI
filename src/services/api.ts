@@ -117,11 +117,16 @@ export async function fetchDashboard(): Promise<DashboardResponse> {
 }
 
 export async function fetchMyTeam(managerId: number): Promise<MyTeamResponse> {
-  const { players, currentGw } = await ensureDataLoaded();
+  const { players } = await ensureDataLoaded();
+
+  const events = cachedBootstrap?.events || [];
+  const currentEvent = events.find((e: any) => e.is_current);
+  const finishedEvents = events.filter((e: any) => e.finished);
+  const latestPickGw = currentEvent ? currentEvent.id : (finishedEvents.length > 0 ? finishedEvents[finishedEvents.length - 1].id : 1);
 
   const [profile, picksRes] = await Promise.all([
     getManager(managerId),
-    getManagerPicks(managerId, currentGw)
+    getManagerPicks(managerId, latestPickGw)
   ]);
 
   return engineAnalyzeMyTeam(profile, picksRes, players);

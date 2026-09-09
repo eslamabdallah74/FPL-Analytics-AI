@@ -211,8 +211,46 @@ export const MyTeamView: React.FC<MyTeamViewProps> = ({ onSelectPlayer }) => {
         )}
       </div>
 
+      {/* Loading Animation State */}
+      {loading && (
+        <div className="glass-card p-8 sm:p-12 text-center space-y-6 relative overflow-hidden border border-[#38ef7d]/30 bg-gradient-to-b from-[#0a1510]/90 via-[#070a12]/95 to-[#070a12] rounded-3xl shadow-2xl">
+          {/* Animated Pitch Radar Ring */}
+          <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-2 border-[#38ef7d]/20 animate-ping" />
+            <div className="absolute inset-2 rounded-full border-2 border-dashed border-[#38ef7d]/40 animate-spin [animation-duration:6s]" />
+            <div className="absolute inset-4 rounded-full bg-[#38ef7d]/10 flex items-center justify-center backdrop-blur-sm border border-[#38ef7d]/50 shadow-inner">
+              <Sparkles className="w-8 h-8 text-[#38ef7d] animate-pulse" />
+            </div>
+          </div>
+
+          {/* Loading Status Text */}
+          <div className="space-y-2 max-w-md mx-auto">
+            <h3 className="text-lg font-extrabold text-white flex items-center justify-center gap-2">
+              <Loader2 className="w-5 h-5 text-[#38ef7d] animate-spin" />
+              <span>{isAr ? 'جاري مزامنة وتحليل التشكيلة...' : 'Syncing & Analyzing FPL Squad...'}</span>
+            </h3>
+            <p className="text-xs text-gray-400">
+              {isAr 
+                ? 'يتم الآن جلب بيانات خوادم الفانتسي الرسمية وتطبيق خوارزميات النقاط المتوقعة (xP)...' 
+                : 'Connecting to official FPL servers and processing expected points (xP) analytics...'}
+            </p>
+          </div>
+
+          {/* Tactical Skeleton Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto pt-2 opacity-75">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-2 animate-pulse">
+                <div className="w-8 h-8 rounded-full bg-white/10 mx-auto" />
+                <div className="h-3 bg-white/10 rounded w-3/4 mx-auto" />
+                <div className="h-2.5 bg-white/5 rounded w-1/2 mx-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Main Content Area */}
-      {data && (
+      {data && !loading && (
         <div className="space-y-8">
           {/* Manager Stats Bar */}
           <div className="glass-card p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
