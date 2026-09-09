@@ -17,6 +17,7 @@ import { AIChatView } from './views/AIChatView';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { fetchDashboard } from './services/api';
 import type { DashboardResponse, Player } from './types';
+import { Analytics } from '@vercel/analytics/react';
 
 import { 
   LayoutDashboard, 
@@ -283,6 +284,7 @@ export function App() {
   return (
     <LanguageProvider>
       <AppContent />
+      <Analytics />
     </LanguageProvider>
   );
 }
