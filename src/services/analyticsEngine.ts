@@ -175,24 +175,34 @@ export function processPlayers(
     const upcomingFdr = fdrData ? fdrData.avg_fdr : 3.0;
     const upcomingFixtures = fdrData ? fdrData.fixtures : [];
 
+    const nextFx = upcomingFixtures.length > 0 ? upcomingFixtures[0] : null;
+    const nextDiff = nextFx ? nextFx.difficulty : 3;
+    const isHome = nextFx ? nextFx.is_home : false;
+
+    // Next match fixture difficulty factor: Diff 1=1.25, Diff 2=1.0, Diff 3=0.75, Diff 4=0.5, Diff 5=0.25
+    const nextDiffFactor = (6.0 - nextDiff) * 0.25;
+    const homeBonus = isHome ? 1.15 : 0.85;
+
+    // Captain ceiling position multiplier (FWD & MID prioritised for captaincy)
+    const posCaptainMult = p.element_type === 4 ? 1.3 : p.element_type === 3 ? 1.2 : p.element_type === 2 ? 0.6 : 0.35;
+
     const rawTransferScore =
       formScore * 7.5 + (5.0 - upcomingFdr) * 8.0 + valueScore * 1.2 + minsRatio * 15.0;
     const transferScore = parseFloat(
       Math.min(Math.max(rawTransferScore, 0.0), 100.0).toFixed(1)
     );
 
+    const attackingThreat = ictIndex * 0.15 + (goalsScored * 0.5 + assists * 0.3);
     const rawCaptainScore =
-      formScore * 9.0 + (5.0 - upcomingFdr) * 7.0 + ictIndex * 0.25 + minsRatio * 10.0;
+      (formScore * 0.8 + attackingThreat + nextDiffFactor * 4.0) * homeBonus * posCaptainMult * (minsRatio > 0.4 ? 1.0 : 0.3);
     const captainScore = parseFloat(
-      Math.min(Math.max(rawCaptainScore, 0.0), 100.0).toFixed(1)
+      Math.min(Math.max(rawCaptainScore * 1.5, 0.0), 100.0).toFixed(1)
     );
 
-    const epNextVal = parseFloat(p.ep_next) || 0.0;
-    const rawXp =
-      epNextVal > 0
-        ? epNextVal
-        : formScore * 0.6 + (5.0 - upcomingFdr) * 0.4 + ictIndex * 0.02;
-    const expectedPoints = parseFloat(Math.min(Math.max(rawXp, 0.0), 20.0).toFixed(1));
+    const basePp = pointsPerGame > 0 ? pointsPerGame : formScore;
+    const fixtureXpMult = Math.max((6.0 - nextDiff) * 0.2, 0.3) * homeBonus;
+    const rawXp = (formScore * 0.4 + basePp * 0.4 + ictIndex * 0.03) * fixtureXpMult * (minsRatio > 0.4 ? 1.0 : 0.2);
+    const expectedPoints = parseFloat(Math.min(Math.max(rawXp, 0.5), 18.0).toFixed(1));
 
     const nineties = minutes >= 90 ? minutes / 90.0 : 0.0;
     const ictPer90 = nineties > 0 ? parseFloat((ictIndex / nineties).toFixed(2)) : 0.0;
@@ -330,12 +340,18 @@ export function getCaptainRankings(
   valid.sort((a, b) => b.captain_score - a.captain_score);
 
   const sliced = valid.slice(0, topN);
-  return sliced.map((p, index) => ({
-    rank: index + 1,
-    player: p,
-    captain_score: p.captain_score,
-    rationale: `High attacking form (${p.form_score} pts/GW), reliable minutes (${p.rotation_risk} risk), and upcoming fixture FDR of ${p.upcoming_fdr}.`
-  }));
+  return sliced.map((p, index) => {
+    const nextFx = p.upcoming_fixtures && p.upcoming_fixtures.length > 0 ? p.upcoming_fixtures[0] : null;
+    const oppStr = nextFx ? `${nextFx.is_home ? 'vs' : '@'} ${nextFx.opponent_name || nextFx.opponent_short}` : '';
+    const fdrVal = nextFx ? nextFx.difficulty : p.upcoming_fdr;
+
+    return {
+      rank: index + 1,
+      player: p,
+      captain_score: p.captain_score,
+      rationale: `Form: ${p.form_score} pts/GW, Next Match: ${oppStr} (FDR ${fdrVal}), High attacking potential (${p.position_name}).`
+    };
+  });
 }
 
 export function getDifferentials(
