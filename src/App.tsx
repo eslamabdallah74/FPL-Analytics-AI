@@ -48,6 +48,27 @@ function AppContent() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+    const tabTitles: Record<string, { ar: string; en: string }> = {
+      dashboard: { ar: 'لوحة التحكم والتحليلات | FPL Analytics AI', en: 'Dashboard & Metrics | FPL Analytics AI' },
+      my_team: { ar: 'محلل تشكيلات الفانتسي الشخصي | FPL Analytics AI', en: 'FPL Squad Analyzer | FPL Analytics AI' },
+      generator: { ar: 'بناء أفضل تشكيلة خوارزمية | FPL Analytics AI', en: 'AI Squad Generator | FPL Analytics AI' },
+      ai_chat: { ar: 'المساعد الذكي لفانتسي البريميرليج | FPL Analytics AI', en: 'FPL AI Assistant Chat | FPL Analytics AI' },
+      planner: { ar: 'جدول المباريات وسهولة الجدول | FPL Analytics AI', en: 'Fixture Difficulty Planner | FPL Analytics AI' },
+      players: { ar: 'قاعدة بيانات إحصائيات اللاعبين | FPL Analytics AI', en: 'Player Stats & Search | FPL Analytics AI' },
+      transfers: { ar: 'أفضل الانتقالات الموصى بها | FPL Analytics AI', en: 'Transfer Recommendations | FPL Analytics AI' },
+      captain: { ar: 'ترشيحات الكابتن وحساب النقاط المتوقعة | FPL Analytics AI', en: 'Captain Candidate Picks | FPL Analytics AI' },
+      differentials: { ar: 'اللاعبين المتميزين (الديفرينشال) | FPL Analytics AI', en: 'Differential Picks | FPL Analytics AI' },
+      compare: { ar: 'مقارنة بين اثنين من اللاعبين | FPL Analytics AI', en: 'Player Comparison Tool | FPL Analytics AI' }
+    };
+
+    const titleObj = tabTitles[activeTab] || tabTitles.dashboard;
+    document.title = isAr ? titleObj.ar : titleObj.en;
+  }, [activeTab, language, isAr]);
+
+  useEffect(() => {
     fetchDashboard()
       .then((data) => {
         setDashboardData(data);
