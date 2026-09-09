@@ -19,7 +19,11 @@ export function getEffectiveApiKey(): string {
   if (customKey) {
     return customKey;
   }
-  return (import.meta.env.VITE_OPENROUTER_API_KEY || '').trim();
+  return (
+    import.meta.env.VITE_OPENROUTER_API_KEY ||
+    import.meta.env.OPENROUTER_API_KEY ||
+    ''
+  ).trim();
 }
 
 export function setCustomApiKey(key: string) {
@@ -120,7 +124,7 @@ ${contextSummary}
     }))
   ];
 
-  const model = import.meta.env.VITE_AI_MODEL || 'deepseek/deepseek-chat';
+  const model = import.meta.env.VITE_AI_MODEL || import.meta.env.OPENROUTER_AI_MODEL || 'deepseek/deepseek-chat';
 
   // Increment request count on device before sending
   if (!getCustomApiKey()) {
